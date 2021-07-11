@@ -121,7 +121,6 @@ func _physics_process(delta):
 		if collision.collider.is_in_group("prop"):
 			if get_tree().get_network_unique_id() == 1:
 				collision.collider.apply_central_impulse(-collision.normal * inertia)
-				self.apply_central_impulse(-collision.normal * inertia)
 			else:
 				Signals.emit_signal("impulsePropRequest",-collision.normal * inertia)
 		
