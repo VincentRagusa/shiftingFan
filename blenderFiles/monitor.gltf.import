@@ -2,12 +2,12 @@
 
 importer="scene"
 type="PackedScene"
-path="res://.import/papertowel.gltf-391cc647b95b297ab5faa5b8e387cb14.scn"
+path="res://.import/monitor.gltf-2f02ac057b80d28a1b3f58350bbefcca.scn"
 
 [deps]
 
-source_file="res://blenderFiles/papertowel.gltf"
-dest_files=[ "res://.import/papertowel.gltf-391cc647b95b297ab5faa5b8e387cb14.scn" ]
+source_file="res://blenderFiles/monitor.gltf"
+dest_files=[ "res://.import/monitor.gltf-2f02ac057b80d28a1b3f58350bbefcca.scn" ]
 
 [params]
 
@@ -16,7 +16,7 @@ nodes/root_name="Scene Root"
 nodes/root_scale=1.0
 nodes/custom_script=""
 nodes/storage=0
-nodes/use_legacy_names=true
+nodes/use_legacy_names=false
 materials/location=1
 materials/storage=1
 materials/keep_on_reimport=true
