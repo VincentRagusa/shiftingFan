@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://sprites/crosshairs1.png" type="Texture" id=1]
+
+[node name="HUD" type="Node2D"]
+
+[node name="crosshairs1" type="Sprite" parent="."]
+position = Vector2( 512, 304 )
+scale = Vector2( 1.33333, 1.33333 )
+texture = ExtResource( 1 )
