@@ -1,7 +1,7 @@
 extends RigidBody
 
 onready var body = $Body
-export (PackedScene) var BodyScene
+export (PackedScene) var BodyScene #TODO: instead of double linking this, can we use the genericProp instead?
 
 
 func get_BodyScene():
