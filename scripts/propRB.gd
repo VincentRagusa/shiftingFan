@@ -26,4 +26,4 @@ func get_height():
 
 func _process(delta):
 	if is_network_master() and (linear_velocity != Vector3() or angular_velocity != Vector3()):
-		Signals.emit_signal("genericPropNotifyMove",self.global_transform)
+		get_parent()._onGenericPropNotifyMove(self.global_transform)

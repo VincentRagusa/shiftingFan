@@ -122,7 +122,7 @@ func _physics_process(delta):
 			if get_tree().get_network_unique_id() == 1:
 				collision.collider.apply_central_impulse(-collision.normal * inertia)
 			else:
-				Signals.emit_signal("impulsePropRequest",-collision.normal * inertia)
+				collision.collider.requestPropImpulse(-collision.normal * inertia)
 		
 	# move along the current velocity
 	if vel != Vector3(): #don't update if not moving

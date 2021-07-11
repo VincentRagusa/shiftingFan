@@ -19,3 +19,6 @@ func get_allCollisionShapesAndTransforms():
 
 func get_height():
 	return self.translation.y
+
+func requestPropImpulse(impulse):
+	get_parent()._onKBImpulseRequest(impulse)
