@@ -1,3 +1,0 @@
-Godot Engine v3.3.2.stable.official - https://godotengine.org
-**ERROR**: X11 Display is not available
-   At: platform/x11/os_x11.cpp:129:initialize() - X11 Display is not available
