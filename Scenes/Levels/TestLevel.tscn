@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=2]
+[gd_scene load_steps=26 format=2]
 
 [ext_resource path="res://Scenes/Props/prop_speaker.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Scenes/Props/prop_ToiletPaper.tscn" type="PackedScene" id=2]
@@ -6,9 +6,14 @@
 [ext_resource path="res://Scenes/Props/prop_BepisCan.tscn" type="PackedScene" id=4]
 [ext_resource path="res://blenderFiles/wood_table.gltf" type="PackedScene" id=5]
 [ext_resource path="res://Scenes/Prop_Generic.tscn" type="PackedScene" id=6]
+[ext_resource path="res://blenderFiles/toiletpaper.gltf" type="PackedScene" id=7]
+[ext_resource path="res://blenderFiles/speaker.gltf" type="PackedScene" id=8]
 [ext_resource path="res://Scenes/Props/prop_PaperTowel.tscn" type="PackedScene" id=9]
+[ext_resource path="res://blenderFiles/papertowel.gltf" type="PackedScene" id=10]
 [ext_resource path="res://Scenes/Static_Table.tscn" type="PackedScene" id=11]
 [ext_resource path="res://Scenes/Props/prop_WoodTable.tscn" type="PackedScene" id=12]
+[ext_resource path="res://blenderFiles/bepis_can_soda.gltf" type="PackedScene" id=13]
+[ext_resource path="res://blenderFiles/computer.gltf" type="PackedScene" id=14]
 
 [sub_resource type="CubeMesh" id=1]
 size = Vector3( 60, 10, 2 )
@@ -100,26 +105,6 @@ material/0 = null
 [node name="Static_Table" parent="LevelStatics" instance=ExtResource( 11 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 9.05724, 0.00488631, -5.54549 )
 
-[node name="LevelRigids" type="Spatial" parent="."]
-
-[node name="prop_BrownTable" parent="LevelRigids" instance=ExtResource( 12 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -5.05729, 0.00417948, -0.04193 )
-
-[node name="prop_BepisCan" parent="LevelRigids" instance=ExtResource( 4 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 8.87192, 1.02279, -5.59338 )
-
-[node name="prop_ToiletPaper" parent="LevelRigids" instance=ExtResource( 2 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 8.37243, 1.05045, -5.55405 )
-
-[node name="prop_PaperTowel" parent="LevelRigids" instance=ExtResource( 9 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 9.63552, 1.10886, -5.67276 )
-
-[node name="prop_speaker" parent="LevelRigids" instance=ExtResource( 1 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 9.08811, 0.974106, -5.56761 )
-
-[node name="prop_Computer" parent="LevelRigids" instance=ExtResource( 3 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0.000661939, -6 )
-
 [node name="OmniLight" type="OmniLight" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 10.0776, 0 )
 shadow_enabled = true
@@ -130,6 +115,31 @@ omni_range = 29.5768
 [node name="GenericProps" type="Spatial" parent="."]
 
 [node name="Prop_Generic" parent="GenericProps" instance=ExtResource( 6 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 11.2621, 0.000197053, 14.5398 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 1, 18 )
 RigidScene = ExtResource( 12 )
 BodyScene = ExtResource( 5 )
+
+[node name="Prop_Generic2" parent="GenericProps" instance=ExtResource( 6 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 1, 18 )
+RigidScene = ExtResource( 4 )
+BodyScene = ExtResource( 13 )
+
+[node name="Prop_Generic3" parent="GenericProps" instance=ExtResource( 6 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 1, 18 )
+RigidScene = ExtResource( 3 )
+BodyScene = ExtResource( 14 )
+
+[node name="Prop_Generic4" parent="GenericProps" instance=ExtResource( 6 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 1, 18 )
+RigidScene = ExtResource( 9 )
+BodyScene = ExtResource( 10 )
+
+[node name="Prop_Generic5" parent="GenericProps" instance=ExtResource( 6 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 1, 18 )
+RigidScene = ExtResource( 1 )
+BodyScene = ExtResource( 8 )
+
+[node name="Prop_Generic6" parent="GenericProps" instance=ExtResource( 6 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 18 )
+RigidScene = ExtResource( 2 )
+BodyScene = ExtResource( 7 )

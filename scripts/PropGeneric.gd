@@ -8,10 +8,8 @@ func get_BodyScenePath():
 
 func _ready():
 	if get_tree().get_network_unique_id() == 1: #if is the server
-		Signals.connect("genericPropNotifyMove", self, "_onGenericPropNotifyMove")
 		add_child(RigidScene.instance())
 	else:
-		Signals.connect("impulsePropRequest", self, "_onKBImpulseRequest")
 		var kbScript = preload("res://scripts/propKB.gd")
 		var kb = KinematicBody.new()
 		kb.set_network_master(1)
