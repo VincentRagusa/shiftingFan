@@ -1,3 +1,5 @@
+tool
+
 extends Spatial
 
 export (PackedScene) var RigidScene #used server-side to compute physics
@@ -7,18 +9,21 @@ func get_BodyScenePath():
 	return BodyScene.resource_path
 
 func _ready():
-	if get_tree().get_network_unique_id() == 1: #if is the server
-		add_child(RigidScene.instance())
+	if Engine.editor_hint:
+		add_child(BodyScene.instance())
 	else:
-		var kbScript = preload("res://scripts/propKB.gd")
-		var kb = KinematicBody.new()
-		kb.set_network_master(1)
-		kb.add_to_group("prop")
-		kb.set_script(kbScript) #may have to set process to true
-		var rb = RigidScene.instance()
-		for child in rb.get_children():
-			kb.add_child(child.duplicate(true))
-		add_child(kb)
+		if get_tree().get_network_unique_id() == 1: #if is the server
+			add_child(RigidScene.instance())
+		else:
+			var kbScript = preload("res://scripts/propKB.gd")
+			var kb = KinematicBody.new()
+			kb.set_network_master(1)
+			kb.add_to_group("prop")
+			kb.set_script(kbScript) #may have to set process to true
+			var rb = RigidScene.instance()
+			for child in rb.get_children():
+				kb.add_child(child.duplicate(true))
+			add_child(kb)
 
 func _onKBImpulseRequest(impulse):
 	rpc_id(1,"applyRemoteImpulse",impulse)
