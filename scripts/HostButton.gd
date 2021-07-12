@@ -10,6 +10,8 @@ func _on_Host_pressed():
 	peer.create_server(SERVER_PORT, MAX_PLAYERS)
 	get_tree().network_peer = peer
 	
+	get_node("../../VBoxContainer2/ItemList").visible = true
+	
 	self.disabled = true
 	get_node("../Join").disabled = true
 	

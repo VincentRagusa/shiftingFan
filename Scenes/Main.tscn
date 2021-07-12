@@ -1,10 +1,11 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://scripts/JoinButton.gd" type="Script" id=1]
 [ext_resource path="res://scripts/HostButton.gd" type="Script" id=2]
 [ext_resource path="res://sprites/titlescreen.jpg" type="Texture" id=3]
 [ext_resource path="res://scripts/LobbyUI.gd" type="Script" id=4]
 [ext_resource path="res://scripts/Ready.gd" type="Script" id=5]
+[ext_resource path="res://scripts/ItemList.gd" type="Script" id=6]
 
 [node name="Main" type="Node"]
 
@@ -89,6 +90,15 @@ margin_top = 28.0
 margin_right = 325.0
 margin_bottom = 52.0
 text = "12345"
+
+[node name="ItemList" type="ItemList" parent="Menu/VBoxContainer/HBoxContainer/VBoxContainer2"]
+visible = false
+margin_top = 56.0
+margin_right = 325.0
+margin_bottom = 278.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource( 6 )
 
 [node name="LobbyItems" type="VBoxContainer" parent="Menu/VBoxContainer/HBoxContainer"]
 margin_left = 658.0

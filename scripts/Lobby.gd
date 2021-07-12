@@ -10,6 +10,8 @@ var selfRole = 0 #TODO makes this an enum: 0 = prop, 1 = hunter.
 var selfReady = false
 var selfDone = false
 
+
+
 func _ready():
 	get_tree().connect("network_peer_connected", self, "_player_connected")
 	get_tree().connect("network_peer_disconnected", self, "_player_disconnected")
@@ -105,7 +107,8 @@ func checkAllReady():
 		if allReady:
 			print("All members ready! Sending signal to pre configure...")
 			#calls everyone, but is only called by server, and only when last guy readies up
-			rpc("pre_configure_game")
+			var worldSelector = get_node("/root/Main/Menu/VBoxContainer/HBoxContainer/VBoxContainer2/ItemList")
+			rpc("pre_configure_game",worldSelector.getWorldPath())
 			
 remote func _updatePlayerStatus(ready,role):
 	var id = get_tree().get_rpc_sender_id()
@@ -122,12 +125,12 @@ remote func _updatePlayerStatus(ready,role):
 		Lobby.selfRole)
 	checkAllReady()
 
-remotesync func pre_configure_game():
+remotesync func pre_configure_game(worldPath):
 	get_tree().set_pause(true) # Pre-pause
 	var selfPeerID = get_tree().get_network_unique_id()
 
 	# Load world
-	var world = preload("res://Scenes/Levels/TestLevel.tscn").instance()
+	var world = load(worldPath).instance()
 	get_node("/root").add_child(world)
 
 	# Load my player
