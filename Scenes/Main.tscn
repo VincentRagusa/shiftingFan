@@ -92,6 +92,7 @@ margin_bottom = 52.0
 text = "12345"
 
 [node name="ItemList" type="ItemList" parent="Menu/VBoxContainer/HBoxContainer/VBoxContainer2"]
+visible = false
 margin_top = 56.0
 margin_right = 325.0
 margin_bottom = 278.0

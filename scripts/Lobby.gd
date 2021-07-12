@@ -70,7 +70,8 @@ func checkAllReady():
 		if allReady:
 			print("All members ready! Sending signal to pre configure...")
 			#calls everyone, but is only called by server, and only when last guy readies up
-			rpc("pre_configure_game")
+			var worldSelector = get_node("/root/Main/Menu/VBoxContainer/HBoxContainer/VBoxContainer2/ItemList")
+			rpc("pre_configure_game",worldSelector.getWorldPath())
 			
 remote func toggle_ready_player():
 	var id = get_tree().get_rpc_sender_id()
@@ -79,14 +80,12 @@ remote func toggle_ready_player():
 	Signals.emit_signal("lobbyUIupdate",player_info,ready_players)
 	checkAllReady()
 
-remotesync func pre_configure_game():
+remotesync func pre_configure_game(worldPath):
 	get_tree().set_pause(true) # Pre-pause
 	var selfPeerID = get_tree().get_network_unique_id()
 
 	# Load world
-	var worldSelector = get_node("/root/Main/Menu/VBoxContainer/HBoxContainer/VBoxContainer2/ItemList")
-#	var world = preload("res://Scenes/Levels/TestLevel.tscn").instance()
-	var world = load(worldSelector.getWorldPath()).instance()
+	var world = load(worldPath).instance()
 	get_node("/root").add_child(world)
 
 	# Load my player
