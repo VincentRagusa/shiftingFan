@@ -46,7 +46,7 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, -4 )
 enabled = true
 cast_to = Vector3( 0, 0, 8 )
 
-[node name="Camera" type="Camera" parent="CameraOrbit"]
+[node name="Camera" type="ClippedCamera" parent="CameraOrbit"]
 transform = Transform( -1, 0, -3.25841e-07, 0, 1, 0, 3.25841e-07, 0, -1, 0, 0.9, -3 )
 
 [node name="HUD" parent="CameraOrbit/Camera" instance=ExtResource( 3 )]

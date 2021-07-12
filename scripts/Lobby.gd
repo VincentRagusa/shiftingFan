@@ -8,6 +8,8 @@ var done_players = {}
 var selfReady = false
 var selfDone = false
 
+
+
 func _ready():
 	get_tree().connect("network_peer_connected", self, "_player_connected")
 	get_tree().connect("network_peer_disconnected", self, "_player_disconnected")
@@ -82,7 +84,9 @@ remotesync func pre_configure_game():
 	var selfPeerID = get_tree().get_network_unique_id()
 
 	# Load world
-	var world = preload("res://Scenes/Levels/TestLevel.tscn").instance()
+	var worldSelector = get_node("/root/Main/Menu/VBoxContainer/HBoxContainer/VBoxContainer2/ItemList")
+#	var world = preload("res://Scenes/Levels/TestLevel.tscn").instance()
+	var world = load(worldSelector.getWorldPath()).instance()
 	get_node("/root").add_child(world)
 
 	# Load my player
