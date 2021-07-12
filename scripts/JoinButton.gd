@@ -2,6 +2,7 @@ extends Button
 
 onready var menu = get_node("/root/Main/Menu")
 
+
 func _on_Join_pressed():
 	
 	var SERVER_IP = get_node("../../VBoxContainer2/IPaddr").text
@@ -10,3 +11,7 @@ func _on_Join_pressed():
 	var peer = NetworkedMultiplayerENet.new()
 	peer.create_client(SERVER_IP, SERVER_PORT)
 	get_tree().network_peer = peer
+
+	#these buttons will unlock if the server join request times out (Lobby.gd)
+	self.disabled = true
+	get_node("../Host").disabled = true
