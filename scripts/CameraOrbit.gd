@@ -19,7 +19,7 @@ func _input(event):
 func _unhandled_input(event):
 	if event.is_action_pressed("setPlayerRotation"):
 		if playerCameraLocked:
-			player.rotation_degrees.y = orbit.rotation_degrees.y
+			player.rotation_degrees.y += orbit.rotation_degrees.y
 			orbit.rotation_degrees.y = 0
 		playerCameraLocked = not playerCameraLocked
 			
