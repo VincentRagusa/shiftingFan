@@ -160,14 +160,9 @@ RigidScene = ExtResource( 16 )
 BodyScene = ExtResource( 15 )
 
 [node name="Prop_Generic8" parent="GenericProps" instance=ExtResource( 6 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -4, -0.00827605, 18 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -4, -0.00223163, 18 )
 RigidScene = ExtResource( 17 )
 BodyScene = ExtResource( 18 )
-
-[node name="Prop_Generic9" parent="GenericProps" instance=ExtResource( 6 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -6, -0.000549436, 18 )
-RigidScene = ExtResource( 20 )
-BodyScene = ExtResource( 19 )
 
 [node name="Prop_Generic10" parent="GenericProps" instance=ExtResource( 6 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -8, -5.19156e-05, 18 )
@@ -178,3 +173,8 @@ BodyScene = ExtResource( 21 )
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 9.12547e-05, 18 )
 RigidScene = ExtResource( 24 )
 BodyScene = ExtResource( 23 )
+
+[node name="Prop_Generic9" parent="GenericProps" instance=ExtResource( 6 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -6, -0.000549436, 18 )
+RigidScene = ExtResource( 20 )
+BodyScene = ExtResource( 19 )
