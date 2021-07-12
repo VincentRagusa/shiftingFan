@@ -1,12 +1,14 @@
 tool
-
 extends Spatial
+
 
 export (PackedScene) var RigidScene #used server-side to compute physics
 export (PackedScene) var BodyScene # sent to player for mesh
 
+
 func get_BodyScenePath():
 	return BodyScene.resource_path
+
 
 func _ready():
 	if Engine.editor_hint:
@@ -25,20 +27,25 @@ func _ready():
 				kb.add_child(child.duplicate(true))
 			add_child(kb)
 
+
 func _onKBImpulseRequest(impulse):
 	rpc_id(1,"applyRemoteImpulse",impulse)
+
 
 remote func applyRemoteImpulse(impulse):
 	for child in get_children():
 		if child is RigidBody:
 			child.apply_central_impulse(impulse)
 
+
 func _onGenericPropNotifyMove(RBtransform):
 #	print("RB update signal received")
 	rpc_unreliable("propKBUpdate",RBtransform) #TODO: probably should do a time stamp
-	
+
+
 remote func propKBUpdate(RBtransform):
 #	print("received KBupdate packet")
 	for child in get_children():
 		if child is KinematicBody:
 			child.global_transform = RBtransform
+

@@ -42,6 +42,8 @@ func _unhandled_input(event):
 					print("Pew!")
 				elif thingInFront.is_in_group("prop"):
 					print("Ouch!")
+				else:
+					print(thingInFront)
 	if event.is_action_pressed("ui_cancel"):
 		get_tree().quit()
 

@@ -1,20 +1,16 @@
 extends KinematicBody
  
-var curHp : int = 10
+
 export var maxHp : int = 10
 export var damage : int = 1
-
-
-
 export var moveSpeed : float = 5.0
 export var jumpForce : float = 10.0
 export var gravity : float = 15.0
 export var inertia :int = 10
  
 var vel : Vector3 = Vector3()
-
+var curHp : int = 10
 var lastUpdateTime = 0
-
 
 onready var cameraOrbit = $CameraOrbit
 onready var camera = $CameraOrbit/Camera
@@ -22,14 +18,18 @@ onready var attackRayCast = $CameraOrbit/AttackRayCast
 onready var HUD_role = $CameraOrbit/Camera/HUD/RoleIdentifier
 onready var body = $Body
 
+
 func _ready():
 	if is_network_master():
 		HUD_role.text = "PROP"
-	
-remote func _update_player_body(y, bodyScene, origin, collisionShapes):
-	_changePlayerBody(y, bodyScene, origin, collisionShapes)
 
-func _changePlayerBody(y, bodyScene, origin, collisionShapes):
+
+remote func _update_player_body(y, bodyScene, origin, rigidScene):
+	_changePlayerBody(y, bodyScene, origin, rigidScene)
+
+
+func _changePlayerBody(y, bodyScene, origin, rigidScene):
+	print("received ", rigidScene)
 	self.translation.y = y
 	
 	for c in body.get_children():
@@ -41,28 +41,12 @@ func _changePlayerBody(y, bodyScene, origin, collisionShapes):
 	for c in get_children():
 		if c is CollisionShape:
 			c.queue_free()
-	
-	for i in range(len(collisionShapes[0])):
-		var collisionBody = CollisionShape.new()
-		collisionBody.shape = collisionShapes[0][i]
-		collisionBody.transform = collisionShapes[1][i]
-		add_child(collisionBody)
 
+	var dummyProp = load(rigidScene).instance()
+	for child in dummyProp.get_children():
+		if child is CollisionShape:
+			add_child(child.duplicate(true))
 
-
-#func _process(_delta):
-#	if is_network_master():
-#		var thingInFront = attackRayCast.get_collider()
-#		if thingInFront:
-#			if thingInFront.is_in_group("prop"):
-#				if Input.is_action_just_pressed("attack"):
-#					var newY = thingInFront.get_height()+0.01
-#					var newBodyScene = thingInFront.get_BodyScene()
-#					var newBodyOrigin = thingInFront.get_BodyTransform()
-#					var CollisionData = thingInFront.get_allCollisionShapesAndTransforms()
-#					_changePlayerBody(newY, newBodyScene, newBodyOrigin, CollisionData)
-#					rpc("_update_player_body",newY, newBodyScene, newBodyOrigin, CollisionData)
-					
 
 func _unhandled_input(event):
 	if is_network_master():
@@ -85,29 +69,21 @@ func _unhandled_input(event):
 					var newY = thingInFront.get_height()+0.01
 					var newBodyScene = thingInFront.get_BodyScene()
 					var newBodyOrigin = thingInFront.get_BodyTransform()
-					var CollisionData = thingInFront.get_allCollisionShapesAndTransforms()
-					_changePlayerBody(newY, newBodyScene, newBodyOrigin, CollisionData)
-					rpc("_update_player_body",newY, newBodyScene, newBodyOrigin, CollisionData)
+					var rigidScene = thingInFront.get_rigidScene()
+					_changePlayerBody(newY, newBodyScene, newBodyOrigin, rigidScene)
+					print("sent ",rigidScene)
+					rpc("_update_player_body",newY, newBodyScene, newBodyOrigin, rigidScene)
 	if event.is_action_pressed("ui_cancel"):
 		get_tree().quit()
 
-#remote func _set_rotation(rotation,time):
-#	if time > lastUpdateTime:
-#		self.rotation_degrees = rotation
-#		lastUpdateTime = time
-#
-#remote func _set_position(pos,time):
-#	if time > lastUpdateTime:
-#		global_transform.origin = lerp(global_transform.origin,pos,0.33)
-#		lastUpdateTime = time
-		
+
 remote func _set_pos_and_rot(pos,rot,time):
 	if time > lastUpdateTime:
 		global_transform.origin = lerp(global_transform.origin,pos,0.33)
 		self.rotation_degrees = rot
 		lastUpdateTime = time
-		
-# called every physics step (60 times a second)
+
+
 func _physics_process(delta):
 	
 	vel.x = 0
@@ -158,3 +134,4 @@ func _physics_process(delta):
 				global_transform.origin,
 				self.rotation_degrees,
 				OS.get_system_time_msecs())
+
