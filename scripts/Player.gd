@@ -14,7 +14,8 @@ export var inertia :int = 10
 var vel : Vector3 = Vector3()
 
 var lastUpdateTime = 0
- 
+
+
 onready var cameraOrbit = get_node("CameraOrbit")
 onready var camera = get_node("CameraOrbit/Camera")
 onready var attackRayCast = get_node("CameraOrbit/AttackRayCast")
@@ -77,11 +78,22 @@ func _unhandled_input(event):
 	if event.is_action_pressed("ui_cancel"):
 		get_tree().quit()
 
-remote func _set_position(pos,time):
+#remote func _set_rotation(rotation,time):
+#	if time > lastUpdateTime:
+#		self.rotation_degrees = rotation
+#		lastUpdateTime = time
+#
+#remote func _set_position(pos,time):
+#	if time > lastUpdateTime:
+#		global_transform.origin = lerp(global_transform.origin,pos,0.33)
+#		lastUpdateTime = time
+		
+remote func _set_pos_and_rot(pos,rot,time):
 	if time > lastUpdateTime:
 		global_transform.origin = lerp(global_transform.origin,pos,0.33)
+		self.rotation_degrees = rot
 		lastUpdateTime = time
-
+		
 # called every physics step (60 times a second)
 func _physics_process(delta):
 	
@@ -129,4 +141,7 @@ func _physics_process(delta):
 		if is_network_master():#only allow master to control local obj
 			vel = move_and_slide(vel, Vector3.UP,false,4,PI/4,false)
 			#rpc to puppet all remote objs
-			rpc_unreliable("_set_position",global_transform.origin, OS.get_system_time_msecs())
+			rpc_unreliable("_set_pos_and_rot",
+				global_transform.origin,
+				self.rotation_degrees,
+				OS.get_system_time_msecs())
