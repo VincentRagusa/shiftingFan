@@ -29,7 +29,6 @@ remote func _update_player_body(y, bodyScene, origin, rigidScene):
 
 
 func _changePlayerBody(y, bodyScene, origin, rigidScene):
-	print("received ", rigidScene)
 	self.translation.y = y
 	
 	for c in body.get_children():
@@ -71,7 +70,6 @@ func _unhandled_input(event):
 					var newBodyOrigin = thingInFront.get_BodyTransform()
 					var rigidScene = thingInFront.get_rigidScene()
 					_changePlayerBody(newY, newBodyScene, newBodyOrigin, rigidScene)
-					print("sent ",rigidScene)
 					rpc("_update_player_body",newY, newBodyScene, newBodyOrigin, rigidScene)
 	if event.is_action_pressed("ui_cancel"):
 		get_tree().quit()
@@ -79,7 +77,7 @@ func _unhandled_input(event):
 
 remote func _set_pos_and_rot(pos,rot,time):
 	if time > lastUpdateTime:
-		global_transform.origin = lerp(global_transform.origin,pos,0.33)
+		global_transform.origin = pos
 		self.rotation_degrees = rot
 		lastUpdateTime = time
 

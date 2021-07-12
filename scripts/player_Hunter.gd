@@ -50,7 +50,7 @@ func _unhandled_input(event):
 
 remote func _set_pos_and_rot(pos,rot,time):
 	if time > lastUpdateTime:
-		global_transform.origin = lerp(global_transform.origin,pos,0.33)
+		global_transform.origin = pos
 		self.rotation_degrees = rot
 		lastUpdateTime = time
 
