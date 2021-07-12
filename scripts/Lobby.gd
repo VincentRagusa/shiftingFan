@@ -5,6 +5,8 @@ var player_info = {}
 var my_info = { name = "Johnson Magenta", favorite_color = Color8(255, 0, 255) }
 var ready_players = {}
 var done_players = {}
+var player_roles = {}
+var selfRole = 0 #TODO makes this an enum: 0 = prop, 1 = hunter.
 var selfReady = false
 var selfDone = false
 
@@ -18,13 +20,13 @@ func _ready():
 	get_tree().connect("server_disconnected", self, "_server_disconnected")
 	
 	Signals.connect("lobbyToggleReady", self, "_handle_toggle_ready")
-
+	Signals.connect("lobbyChangeRole", self, "_handle_role_change")
 
 func _player_connected(id):
 	#rpc_id is called every time someone joins, and is called by every client
 	#this means that every existing client will send their info to the new client
 	#since the connecting client can't call an rpc on their own ID that instance is not handled
-	rpc_id(id,"register_player", my_info)
+	rpc_id(id,"register_player", my_info,selfReady,selfRole)
 	print(id," network_peer_connected")
 
 
@@ -33,7 +35,14 @@ func _player_disconnected(id):
 	ready_players.erase(id)
 	done_players.erase(id)
 	print(id," network_peer_disconnected")
-	Signals.emit_signal("lobbyUIupdate",player_info,ready_players)
+	
+	Signals.emit_signal(
+		"lobbyUIupdate",
+		Lobby.player_info,
+		Lobby.ready_players,
+		Lobby.player_roles,
+		Lobby.selfReady,
+		Lobby.selfRole)
 
 
 func _connected_ok():
@@ -45,21 +54,49 @@ func _server_disconnected():
 
 
 func _connected_fail():
+	get_node("/root/Main/Menu/VBoxContainer/HBoxContainer/VBoxContainer/Join").disabled = false
+	get_node("/root/Main/Menu/VBoxContainer/HBoxContainer/VBoxContainer/Host").disabled = false
 	print("connection_failed")
 
 
-remote func register_player(info):
+remote func register_player(info,ready,role):
 	var id = get_tree().get_rpc_sender_id()
 	player_info[id] = info
-	ready_players[id] = false #ready system is bugged if player x is ready and player y joins after
+	ready_players[id] = ready 
 	done_players[id] = false
-	Signals.emit_signal("lobbyUIupdate",player_info,ready_players)
+	player_roles[id] = role
+	
+	Signals.emit_signal(
+		"lobbyUIupdate",
+		Lobby.player_info,
+		Lobby.ready_players,
+		Lobby.player_roles,
+		Lobby.selfReady,
+		Lobby.selfRole)
 
 func _handle_toggle_ready():
 	print("Changing ready status to ", not selfReady)
 	selfReady = not selfReady
-	rpc("toggle_ready_player")
+	Signals.emit_signal(
+		"lobbyUIupdate",
+		Lobby.player_info,
+		Lobby.ready_players,
+		Lobby.player_roles,
+		Lobby.selfReady,
+		Lobby.selfRole)
+	rpc("_updatePlayerStatus",selfReady,selfRole)
 	checkAllReady()
+	
+func _handle_role_change(newRole):
+	selfRole = newRole
+	Signals.emit_signal(
+		"lobbyUIupdate",
+		Lobby.player_info,
+		Lobby.ready_players,
+		Lobby.player_roles,
+		Lobby.selfReady,
+		Lobby.selfRole)
+	rpc("_updatePlayerStatus",selfReady,selfRole)
 	
 func checkAllReady():
 	if get_tree().is_network_server():
@@ -73,11 +110,19 @@ func checkAllReady():
 			var worldSelector = get_node("/root/Main/Menu/VBoxContainer/HBoxContainer/VBoxContainer2/ItemList")
 			rpc("pre_configure_game",worldSelector.getWorldPath())
 			
-remote func toggle_ready_player():
+remote func _updatePlayerStatus(ready,role):
 	var id = get_tree().get_rpc_sender_id()
-	print("Changing ready status of ", id, " to ", not ready_players[id])
-	ready_players[id] = not ready_players[id]
-	Signals.emit_signal("lobbyUIupdate",player_info,ready_players)
+	print("Changing ready status of ", id, " to ", ready)
+	ready_players[id] = ready
+	print("Changing role of ", id, " to ", role)
+	player_roles[id] = role
+	Signals.emit_signal(
+		"lobbyUIupdate",
+		Lobby.player_info,
+		Lobby.ready_players,
+		Lobby.player_roles,
+		Lobby.selfReady,
+		Lobby.selfRole)
 	checkAllReady()
 
 remotesync func pre_configure_game(worldPath):

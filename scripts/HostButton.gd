@@ -11,3 +11,14 @@ func _on_Host_pressed():
 	get_tree().network_peer = peer
 	
 	get_node("../../VBoxContainer2/ItemList").visible = true
+	
+	self.disabled = true
+	get_node("../Join").disabled = true
+	
+	Signals.emit_signal(
+		"lobbyUIupdate",
+		Lobby.player_info,
+		Lobby.ready_players,
+		Lobby.player_roles,
+		Lobby.selfReady,
+		Lobby.selfRole)
