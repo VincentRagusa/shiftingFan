@@ -9,7 +9,7 @@ var player_roles = {}
 var selfRole = 0 #TODO makes this an enum: 0 = prop, 1 = hunter.
 var selfReady = false
 var selfDone = false
-
+var roleResources = {0:"res://Scenes/player_Prop.tscn", 1:"res://Scenes/player_Hunter.tscn"}
 
 
 func _ready():
@@ -134,14 +134,14 @@ remotesync func pre_configure_game(worldPath):
 	get_node("/root").add_child(world)
 
 	# Load my player
-	var my_player = preload("res://Scenes/Player.tscn").instance()
+	var my_player = load(roleResources[selfRole]).instance()
 	my_player.set_name(str(selfPeerID))
 	my_player.set_network_master(selfPeerID) # Will be explained later
 	get_node("/root/world/players").add_child(my_player)
 
 	# Load other players
 	for p in player_info:
-		var player = preload("res://Scenes/Player.tscn").instance()
+		var player = load(roleResources[player_roles[p]]).instance()
 		player.set_name(str(p))
 		player.set_network_master(p) # Will be explained later
 		get_node("/root/world/players").add_child(player)

@@ -16,13 +16,16 @@ var vel : Vector3 = Vector3()
 var lastUpdateTime = 0
 
 
-onready var cameraOrbit = get_node("CameraOrbit")
-onready var camera = get_node("CameraOrbit/Camera")
-onready var attackRayCast = get_node("CameraOrbit/AttackRayCast")
-
-#onready var hitbox = $CollisionShape
+onready var cameraOrbit = $CameraOrbit
+onready var camera = $CameraOrbit/Camera
+onready var attackRayCast = $CameraOrbit/AttackRayCast
+onready var HUD_role = $CameraOrbit/Camera/HUD/RoleIdentifier
 onready var body = $Body
 
+func _ready():
+	if is_network_master():
+		HUD_role.text = "PROP"
+	
 remote func _update_player_body(y, bodyScene, origin, collisionShapes):
 	_changePlayerBody(y, bodyScene, origin, collisionShapes)
 
@@ -47,18 +50,18 @@ func _changePlayerBody(y, bodyScene, origin, collisionShapes):
 
 
 
-func _process(_delta):
-	if is_network_master():
-		var thingInFront = attackRayCast.get_collider()
-		if thingInFront:
-			if thingInFront.is_in_group("prop"):
-				if Input.is_action_just_pressed("attack"):
-					var newY = thingInFront.get_height()+0.01
-					var newBodyScene = thingInFront.get_BodyScene()
-					var newBodyOrigin = thingInFront.get_BodyTransform()
-					var CollisionData = thingInFront.get_allCollisionShapesAndTransforms()
-					_changePlayerBody(newY, newBodyScene, newBodyOrigin, CollisionData)
-					rpc("_update_player_body",newY, newBodyScene, newBodyOrigin, CollisionData)
+#func _process(_delta):
+#	if is_network_master():
+#		var thingInFront = attackRayCast.get_collider()
+#		if thingInFront:
+#			if thingInFront.is_in_group("prop"):
+#				if Input.is_action_just_pressed("attack"):
+#					var newY = thingInFront.get_height()+0.01
+#					var newBodyScene = thingInFront.get_BodyScene()
+#					var newBodyOrigin = thingInFront.get_BodyTransform()
+#					var CollisionData = thingInFront.get_allCollisionShapesAndTransforms()
+#					_changePlayerBody(newY, newBodyScene, newBodyOrigin, CollisionData)
+#					rpc("_update_player_body",newY, newBodyScene, newBodyOrigin, CollisionData)
 					
 
 func _unhandled_input(event):
@@ -75,6 +78,16 @@ func _unhandled_input(event):
 			attackRayCast.translation = Vector3(0,0.9,-4)
 			attackRayCast.cast_to = Vector3(0,0,8)
 			cameraOrbit.translation = Vector3(-0.5,0,0)
+		if event.is_action_pressed("attack"):
+			var thingInFront = attackRayCast.get_collider()
+			if thingInFront:
+				if thingInFront.is_in_group("prop"):
+					var newY = thingInFront.get_height()+0.01
+					var newBodyScene = thingInFront.get_BodyScene()
+					var newBodyOrigin = thingInFront.get_BodyTransform()
+					var CollisionData = thingInFront.get_allCollisionShapesAndTransforms()
+					_changePlayerBody(newY, newBodyScene, newBodyOrigin, CollisionData)
+					rpc("_update_player_body",newY, newBodyScene, newBodyOrigin, CollisionData)
 	if event.is_action_pressed("ui_cancel"):
 		get_tree().quit()
 
