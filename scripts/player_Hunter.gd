@@ -1,65 +1,41 @@
 extends KinematicBody
  
-var curHp : int = 10
+
 export var maxHp : int = 10
-export var damage : int = 1
-
-
-
+export var myDamage : int = 1
 export var moveSpeed : float = 5.0
 export var jumpForce : float = 10.0
 export var gravity : float = 15.0
 export var inertia :int = 10
  
 var vel : Vector3 = Vector3()
-
 var lastUpdateTime = 0
+var curHp : int = maxHp
+
+onready var cameraOrbit = $CameraOrbit
+onready var camera = $CameraOrbit/Camera
+onready var attackRayCast = $CameraOrbit/AttackRayCast
+onready var HUD_role = $CameraOrbit/Camera/HUD/RoleIdentifier
+onready var HUD_HP = $CameraOrbit/Camera/HUD/HPIndicator
 
 
-onready var cameraOrbit = get_node("CameraOrbit")
-onready var camera = get_node("CameraOrbit/Camera")
-onready var attackRayCast = get_node("CameraOrbit/AttackRayCast")
-
-#onready var hitbox = $CollisionShape
-onready var body = $Body
-
-remote func _update_player_body(y, bodyScene, origin, collisionShapes):
-	_changePlayerBody(y, bodyScene, origin, collisionShapes)
-
-func _changePlayerBody(y, bodyScene, origin, collisionShapes):
-	self.translation.y = y
-	
-	for c in body.get_children():
-		c.queue_free()
-	body.add_child(load(bodyScene).instance())
-	
-	body.transform = origin
-
-	for c in get_children():
-		if c is CollisionShape:
-			c.queue_free()
-	
-	for i in range(len(collisionShapes[0])):
-		var collisionBody = CollisionShape.new()
-		collisionBody.shape = collisionShapes[0][i]
-		collisionBody.transform = collisionShapes[1][i]
-		add_child(collisionBody)
-
-
-
-func _process(_delta):
+func _ready():
 	if is_network_master():
-		var thingInFront = attackRayCast.get_collider()
-		if thingInFront:
-			if thingInFront.is_in_group("prop"):
-				if Input.is_action_just_pressed("attack"):
-					var newY = thingInFront.get_height()+0.01
-					var newBodyScene = thingInFront.get_BodyScene()
-					var newBodyOrigin = thingInFront.get_BodyTransform()
-					var CollisionData = thingInFront.get_allCollisionShapesAndTransforms()
-					_changePlayerBody(newY, newBodyScene, newBodyOrigin, CollisionData)
-					rpc("_update_player_body",newY, newBodyScene, newBodyOrigin, CollisionData)
-					
+		HUD_role.text = "HUNTER"
+		HUD_HP.text = "HP: " + str(curHp)
+
+
+remote func takeDamage(damage):
+	curHp -= damage
+	HUD_HP.text = "HP: " + str(curHp)
+	if curHp < 1:
+		print("YOU DIED")
+
+
+func notifyOwnerOfDamage(damage,id):
+	#remember that RPCs must call functions in the same file
+	rpc_id(id,"takeDamage",damage)
+
 
 func _unhandled_input(event):
 	if is_network_master():
@@ -75,26 +51,24 @@ func _unhandled_input(event):
 			attackRayCast.translation = Vector3(0,0.9,-4)
 			attackRayCast.cast_to = Vector3(0,0,8)
 			cameraOrbit.translation = Vector3(-0.5,0,0)
+		if event.is_action_pressed("attack"):
+			var thingInFront = attackRayCast.get_collider()
+			if thingInFront:
+				if thingInFront.is_in_group("player_prop"):
+					thingInFront.notifyOwnerOfDamage(myDamage,int(thingInFront.name))
+				elif thingInFront.is_in_group("prop"):
+					takeDamage(myDamage)
 	if event.is_action_pressed("ui_cancel"):
 		get_tree().quit()
 
-#remote func _set_rotation(rotation,time):
-#	if time > lastUpdateTime:
-#		self.rotation_degrees = rotation
-#		lastUpdateTime = time
-#
-#remote func _set_position(pos,time):
-#	if time > lastUpdateTime:
-#		global_transform.origin = lerp(global_transform.origin,pos,0.33)
-#		lastUpdateTime = time
-		
+
 remote func _set_pos_and_rot(pos,rot,time):
 	if time > lastUpdateTime:
-		global_transform.origin = lerp(global_transform.origin,pos,0.33)
+		global_transform.origin = pos
 		self.rotation_degrees = rot
 		lastUpdateTime = time
-		
-# called every physics step (60 times a second)
+
+
 func _physics_process(delta):
 	
 	vel.x = 0
@@ -145,3 +119,4 @@ func _physics_process(delta):
 				global_transform.origin,
 				self.rotation_degrees,
 				OS.get_system_time_msecs())
+
