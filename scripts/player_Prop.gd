@@ -22,19 +22,19 @@ onready var body = $Body
 func _ready():
 	if is_network_master():
 		HUD_role.text = "PROP"
-		HUD_HP.text = "PROP HP: " + str(curHp)
-		print("setting hp first time for prop")
+		HUD_HP.text = "HP: " + str(curHp)
 
-remote func takeDamagePropRpc(damage):
+
+remote func takeDamage(damage):
 	curHp -= damage
-	HUD_HP.text = "PROP HP: " + str(curHp)
-	print("setting hp second time for prop")
+	HUD_HP.text = "HP: " + str(curHp)
 	if curHp < 1:
-		print(" PROP : YOU DIED")	
+		print("YOU DIED")	
 
-func takeDamageProp(damage,id):
-	rpc_id(id,"takeDamagePropRpc",damage)
 
+func notifyOwnerOfDamage(damage,id):
+	#remember that RPCs must call functions in the same file
+	rpc_id(id,"takeDamage",damage)
 
 
 remote func _update_player_body(y, bodyScene, origin, rigidScene):

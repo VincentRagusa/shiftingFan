@@ -22,15 +22,19 @@ onready var HUD_HP = $CameraOrbit/Camera/HUD/HPIndicator
 func _ready():
 	if is_network_master():
 		HUD_role.text = "HUNTER"
-		HUD_HP.text = "HUNTER HP: " + str(curHp)
+		HUD_HP.text = "HP: " + str(curHp)
 
 
 remote func takeDamage(damage):
 	curHp -= damage
-	HUD_HP.text = "HUNTER HP: " + str(curHp)
-	print("hurting hunter")
+	HUD_HP.text = "HP: " + str(curHp)
 	if curHp < 1:
-		print("HUNTER : YOU DIED")
+		print("YOU DIED")
+
+
+func notifyOwnerOfDamage(damage,id):
+	#remember that RPCs must call functions in the same file
+	rpc_id(id,"takeDamage",damage)
 
 
 func _unhandled_input(event):
@@ -51,11 +55,9 @@ func _unhandled_input(event):
 			var thingInFront = attackRayCast.get_collider()
 			if thingInFront:
 				if thingInFront.is_in_group("player_prop"):
-					thingInFront.takeDamageProp(myDamage,int(thingInFront.name))
+					thingInFront.notifyOwnerOfDamage(myDamage,int(thingInFront.name))
 				elif thingInFront.is_in_group("prop"):
 					takeDamage(myDamage)
-				else:
-					print(thingInFront)
 	if event.is_action_pressed("ui_cancel"):
 		get_tree().quit()
 

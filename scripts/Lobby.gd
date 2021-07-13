@@ -136,18 +136,16 @@ remotesync func pre_configure_game(worldPath):
 	# Load my player
 	var my_player = load(roleResources[selfRole]).instance()
 	my_player.set_name(str(selfPeerID))
-	my_player.set_network_master(selfPeerID) # Will be explained later
+	my_player.set_network_master(selfPeerID)
 	get_node("/root/world/players").add_child(my_player)
 
 	# Load other players
 	for p in player_info:
 		var player = load(roleResources[player_roles[p]]).instance()
 		player.set_name(str(p))
-		player.set_network_master(p) # Will be explained later
+		player.set_network_master(p)
 		get_node("/root/world/players").add_child(player)
 
-	# Tell server (remember, server is always ID=1) that this peer is done pre-configuring.
-	# The server can call get_tree().get_rpc_sender_id() to find out who said they were done.
 	print("Done pre config.")
 	selfDone = true
 	rpc("done_preconfiguring")
