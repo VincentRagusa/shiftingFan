@@ -2,7 +2,7 @@ extends KinematicBody
  
 
 export var maxHp : int = 10
-export var damage : int = 1
+export var myDamage : int = 1
 export var moveSpeed : float = 5.0
 export var jumpForce : float = 10.0
 export var gravity : float = 15.0
@@ -16,10 +16,21 @@ onready var cameraOrbit = $CameraOrbit
 onready var camera = $CameraOrbit/Camera
 onready var attackRayCast = $CameraOrbit/AttackRayCast
 onready var HUD_role = $CameraOrbit/Camera/HUD/RoleIdentifier
+onready var HUD_HP = $CameraOrbit/Camera/HUD/HPIndicator
+
 
 func _ready():
 	if is_network_master():
 		HUD_role.text = "HUNTER"
+		HUD_HP.text = "HP: " + str(curHp)
+
+
+remote func takeDamage(damage):
+	curHp -= damage
+	HUD_HP.text = "HP: " + str(curHp)
+	if curHp < 1:
+		print("YOU DIED")
+
 
 func _unhandled_input(event):
 	if is_network_master():
@@ -39,9 +50,9 @@ func _unhandled_input(event):
 			var thingInFront = attackRayCast.get_collider()
 			if thingInFront:
 				if thingInFront.is_in_group("player_prop"):
-					print("Pew!")
+					rpc_id(int(thingInFront.name),"takeDamage",myDamage)
 				elif thingInFront.is_in_group("prop"):
-					print("Ouch!")
+					takeDamage(myDamage)
 				else:
 					print(thingInFront)
 	if event.is_action_pressed("ui_cancel"):

@@ -2,7 +2,6 @@ extends KinematicBody
  
 
 export var maxHp : int = 10
-export var damage : int = 1
 export var moveSpeed : float = 5.0
 export var jumpForce : float = 10.0
 export var gravity : float = 15.0
@@ -16,12 +15,21 @@ onready var cameraOrbit = $CameraOrbit
 onready var camera = $CameraOrbit/Camera
 onready var attackRayCast = $CameraOrbit/AttackRayCast
 onready var HUD_role = $CameraOrbit/Camera/HUD/RoleIdentifier
+onready var HUD_HP = $CameraOrbit/Camera/HUD/HPIndicator
 onready var body = $Body
 
 
 func _ready():
 	if is_network_master():
 		HUD_role.text = "PROP"
+		HUD_HP.text = "HP: " + str(curHp)
+
+
+remote func takeDamage(damage):
+	curHp -= damage
+	HUD_HP.text = "HP: " + str(curHp)
+	if curHp < 1:
+		print("YOU DIED")
 
 
 remote func _update_player_body(y, bodyScene, origin, rigidScene):

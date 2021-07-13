@@ -10,8 +10,18 @@ scale = Vector2( 1.33333, 1.33333 )
 texture = ExtResource( 1 )
 
 [node name="RoleIdentifier" type="Label" parent="."]
-margin_right = 207.0
-margin_bottom = 40.0
+margin_right = 192.0
+margin_bottom = 64.0
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HPIndicator" type="Label" parent="."]
+margin_left = 832.0
+margin_right = 1024.0
+margin_bottom = 64.0
 align = 1
 valign = 1
 __meta__ = {
