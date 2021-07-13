@@ -24,7 +24,7 @@ Lobby="*res://scripts/Lobby.gd"
 
 [debug]
 
-multirun/number_of_windows=2
+multirun/number_of_windows=1
 multirun/window_distance=1270
 multirun/add_custom_args=true
 multirun/other_window_args="join"

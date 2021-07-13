@@ -83,7 +83,7 @@ size_flags_vertical = 3
 [node name="IPaddr" type="LineEdit" parent="Menu/VBoxContainer/HBoxContainer/VBoxContainer2"]
 margin_right = 325.0
 margin_bottom = 24.0
-text = "25.102.221.68"
+text = "localhost"
 
 [node name="port" type="LineEdit" parent="Menu/VBoxContainer/HBoxContainer/VBoxContainer2"]
 margin_top = 28.0
