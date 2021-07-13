@@ -28,6 +28,7 @@ points = PoolVector3Array( 1.15839e-08, 0.649358, -0.088236, 1.15839e-08, 0.6493
 ]]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0 )
 script = ExtResource( 3 )
+maxHp = 12
 
 [node name="Body" type="Spatial" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.0465, 0 )

@@ -22,14 +22,15 @@ onready var HUD_HP = $CameraOrbit/Camera/HUD/HPIndicator
 func _ready():
 	if is_network_master():
 		HUD_role.text = "HUNTER"
-		HUD_HP.text = "HP: " + str(curHp)
+		HUD_HP.text = "HUNTER HP: " + str(curHp)
 
 
 remote func takeDamage(damage):
 	curHp -= damage
-	HUD_HP.text = "HP: " + str(curHp)
+	HUD_HP.text = "HUNTER HP: " + str(curHp)
+	print("hurting hunter")
 	if curHp < 1:
-		print("YOU DIED")
+		print("HUNTER : YOU DIED")
 
 
 func _unhandled_input(event):
@@ -50,7 +51,7 @@ func _unhandled_input(event):
 			var thingInFront = attackRayCast.get_collider()
 			if thingInFront:
 				if thingInFront.is_in_group("player_prop"):
-					rpc_id(int(thingInFront.name),"takeDamage",myDamage)
+					thingInFront.takeDamageProp(myDamage,int(thingInFront.name))
 				elif thingInFront.is_in_group("prop"):
 					takeDamage(myDamage)
 				else:
